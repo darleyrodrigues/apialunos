@@ -2,6 +2,7 @@ package com.darley.cadastroalunos.controller;
 
 import com.darley.cadastroalunos.model.Aluno;
 import com.darley.cadastroalunos.repository.AlunoRepository;
+import com.darley.cadastroalunos.service.AlunoService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,36 +12,35 @@ import java.util.UUID;
 @RequestMapping("/alunos")
 public class AlunoController {
 
-    private final AlunoRepository alunoRepository;
+    private final AlunoService alunoService;
 
-    public AlunoController(AlunoRepository alunoRepository){
-        this.alunoRepository = alunoRepository;
+    public AlunoController(AlunoService alunoService){
+        this.alunoService = alunoService;
     }
 
     @PostMapping
     public Aluno salvar(@RequestBody Aluno aluno){
-        return alunoRepository.save(aluno);
+        return alunoService.salvarAluno(aluno);
     }
 
     @GetMapping("{id}")
     public Aluno buscarPorId(@PathVariable ("id") UUID id){
-        return alunoRepository.findById(id).orElse(null);
+        return alunoService.buscarPorId(id);
     }
 
     @DeleteMapping("{id}")
     public void deletar(@PathVariable ("id") UUID id){
-        alunoRepository.deleteById(id);
+        alunoService.deletar(id);
     }
 
     @PutMapping("{id}")
     public void atualizar(@PathVariable("id") UUID id,
                            @RequestBody Aluno aluno){
-        aluno.setId(id);
-        alunoRepository.save(aluno);
+        alunoService.atualizar(id, aluno);
     }
 
     @GetMapping
     public List<Aluno> listarTodos(){
-        return alunoRepository.findAll();
+        return alunoService.listarTodos();
     }
 }
